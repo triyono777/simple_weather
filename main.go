@@ -3,14 +3,20 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"net/http"
 )
 
 func main() {
+
 	http.HandleFunc("/", GetStatusWeather)
 
 	fmt.Println("server started at localhost:9000")
-	http.ListenAndServe(":9000", nil)
+	err := http.ListenAndServe(":9000", nil)
+	if err != nil {
+		panic(err.Error())
+		return
+	}
 }
 
 type Weather struct {
@@ -18,11 +24,30 @@ type Weather struct {
 	Wind  int `json:"wind"`
 }
 
-func GetStatusWeather(w http.ResponseWriter, r *http.Request) {
-	data := Weather{
-		Water: 5,
-		Wind:  7,
+func RandomWeather() {
+//	var d = 15 * time.Second
+//	var t = time.Now().Add(d)
+//
+//	for {
+//		if time.Now().Before(t) {
+//			continue
+//		}
+//// do somthing
+//	}
+	min := 1
+	max := 100
+
+	data = Weather{
+		Water: rand.Intn(max-min),
+		Wind:  rand.Intn(max-min),
 	}
+
+}
+
+var data Weather
+
+func GetStatusWeather(w http.ResponseWriter, r *http.Request) {
+	RandomWeather()
 	dataWeather := map[string]Weather{
 		"data": data,
 	}
