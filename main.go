@@ -3,8 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"math/rand"
 	"net/http"
+	"path"
 	"time"
 )
 
@@ -14,7 +16,8 @@ func main() {
 
 	go timer()
 
-	http.HandleFunc("/", GetStatusWeather)
+	http.HandleFunc("/", HomeWeather)
+	http.HandleFunc("/getWeather", GetStatusWeather)
 
 	fmt.Println("server started at localhost:9000")
 	err := http.ListenAndServe(":9000", nil)
@@ -44,6 +47,25 @@ func RandomWeather() {
 }
 
 var data Weather
+
+func HomeWeather(w http.ResponseWriter, r *http.Request) {
+	var filepath = path.Join("views", "index.html")
+	var tmpl, err = template.ParseFiles(filepath)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var dataContoh = map[string]interface{}{
+		"water": data.Water,
+		"wind":  data.Wind,
+	}
+
+	err = tmpl.Execute(w, dataContoh)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
 
 func GetStatusWeather(w http.ResponseWriter, r *http.Request) {
 
