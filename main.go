@@ -39,6 +39,7 @@ func RandomWeather() {
 		Wind:  rand.Intn(max - min),
 	}
 	fmt.Println(data)
+	checkDataweather()
 
 }
 
@@ -67,4 +68,30 @@ func timer() {
 		RandomWeather()
 		timer()
 	})
+}
+
+func checkDataweather() {
+	dataWater := data.Water
+	dataWind := data.Wind
+	if dataWater < 6 {
+		fmt.Printf("\n Water %s m,  status aman", dataWater)
+	}
+	if dataWater >= 6 && dataWater <= 8 {
+		fmt.Printf("\nWater %s m,  status siaga", dataWater)
+
+	}
+	if dataWater > 8 {
+		fmt.Printf("\nWater %s m,  status bahaya", dataWater)
+	}
+	if dataWind < 7 {
+		fmt.Printf("\nWind %s m,  status aman", dataWind)
+
+	}
+	if dataWind >= 7 && dataWind <= 15 {
+		fmt.Printf("\nWind %s m,  status siaga", dataWind)
+	}
+	if dataWind > 15 {
+		fmt.Printf("\nWind %s m,  status bahaya", dataWind)
+	}
+
 }
