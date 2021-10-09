@@ -5,9 +5,14 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
+	"time"
 )
 
+var timeout = 5
+
 func main() {
+
+	go timer()
 
 	http.HandleFunc("/", GetStatusWeather)
 
@@ -25,29 +30,22 @@ type Weather struct {
 }
 
 func RandomWeather() {
-//	var d = 15 * time.Second
-//	var t = time.Now().Add(d)
-//
-//	for {
-//		if time.Now().Before(t) {
-//			continue
-//		}
-//// do somthing
-//	}
+
 	min := 1
 	max := 100
 
 	data = Weather{
-		Water: rand.Intn(max-min),
-		Wind:  rand.Intn(max-min),
+		Water: rand.Intn(max - min),
+		Wind:  rand.Intn(max - min),
 	}
+	fmt.Println(data)
 
 }
 
 var data Weather
 
 func GetStatusWeather(w http.ResponseWriter, r *http.Request) {
-	RandomWeather()
+
 	dataWeather := map[string]Weather{
 		"data": data,
 	}
@@ -62,4 +60,11 @@ func GetStatusWeather(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
+}
+
+func timer() {
+	time.AfterFunc(time.Duration(timeout)*time.Second, func() {
+		RandomWeather()
+		timer()
+	})
 }
