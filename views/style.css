@@ -1,0 +1,64 @@
+.whole-app {
+    max-width: 600px;
+    margin: 0 auto;
+    display: block;
+    padding: 40px;
+    border: 1px solid #dadde1;
+    margin-top: 30px;
+    border-radius: 5px;
+
+    height: 100%;
+}
+h1 {
+    color: #bdc1c6;
+    display: block;
+    font-family: "Google Sans", Roboto, arial, sans-serif;
+    font-size: 22px;
+    font-weight: 400;
+    height: 26px;
+    line-height: 26px;
+}
+.list1 {
+    list-style-type: none;
+    color: rgb(154, 160, 166);
+    font-family: Roboto, arial, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    height: 20px;
+    line-height: 20px;
+}
+.list2 {
+    list-style-type: none;
+    color: rgb(154, 160, 166);
+
+    font-family: Roboto, arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    height: 16px;
+    line-height: 16px;
+}
+ul {
+    padding: 0;
+    margin: 0;
+}
+
+.whole-app-wrapper {
+    max-width: 600px;
+    margin: 30px auto;
+}
+.degree {
+    font-size: 50px;
+    position: relative;
+    bottom: -15px;
+}
+sup {
+    font-size: 16px;
+    position: relative;
+    top: -14px;
+}
+.celsius {
+    text-decoration: none;
+}
+.farh {
+    text-decoration: none;
+}

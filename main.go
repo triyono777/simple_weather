@@ -59,6 +59,7 @@ func HomeWeather(w http.ResponseWriter, r *http.Request) {
 	var dataContoh = map[string]interface{}{
 		"water": data.Water,
 		"wind":  data.Wind,
+		"data":  data,
 	}
 
 	err = tmpl.Execute(w, dataContoh)
@@ -69,8 +70,37 @@ func HomeWeather(w http.ResponseWriter, r *http.Request) {
 
 func GetStatusWeather(w http.ResponseWriter, r *http.Request) {
 
-	dataWeather := map[string]Weather{
-		"data": data,
+	var statusWater string
+	var statusWind string
+	currentTime := time.Now()
+	dataWater := data.Water
+	dataWind := data.Wind
+	fmt.Printf("date %s", currentTime.Format("01-02-2006"))
+	//dataStatus:=""
+	if dataWater < 6 {
+		statusWater = "status aman"
+	}
+	if dataWater >= 6 && dataWater <= 8 {
+		statusWater = "status siaga"
+
+	}
+	if dataWater > 8 {
+		statusWater = "status bahaya"
+	}
+	if dataWind < 7 {
+		statusWind = "status aman"
+
+	}
+	if dataWind >= 7 && dataWind <= 15 {
+		statusWind = "status siaga"
+	}
+	if dataWind > 15 {
+		statusWind = "status bahaya"
+	}
+	dataWeather := map[string]interface{}{
+		"status":         data,
+		"status_water": statusWater,
+		"status_wind":  statusWind,
 	}
 
 	jsonInBytes, err := json.Marshal(dataWeather)
@@ -93,10 +123,14 @@ func timer() {
 }
 
 func checkDataweather() {
+	currentTime := time.Now()
 	dataWater := data.Water
 	dataWind := data.Wind
+	fmt.Printf("date %s", currentTime.Format("01-02-2006"))
+	//dataStatus:=""
 	if dataWater < 6 {
-		fmt.Printf("\n Water %s m,  status aman", dataWater)
+
+		fmt.Printf("\n Water %s m,  status aman , date %s", dataWater, currentTime)
 	}
 	if dataWater >= 6 && dataWater <= 8 {
 		fmt.Printf("\nWater %s m,  status siaga", dataWater)
