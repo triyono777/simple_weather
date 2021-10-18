@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"html/template"
 	"math/rand"
@@ -32,6 +31,12 @@ type Weather struct {
 	Wind  int `json:"wind"`
 }
 
+type DataWeather struct {
+	Data        Weather `json:"data"`
+	StatusWater string  `json:"status_water"`
+	StatusWind  string  `json:"status_wind"`
+}
+
 func RandomWeather() {
 
 	min := 1
@@ -42,13 +47,13 @@ func RandomWeather() {
 		Wind:  rand.Intn(max - min),
 	}
 	fmt.Println(data)
-	checkDataweather()
 
 }
 
 var data Weather
 
 func HomeWeather(w http.ResponseWriter, r *http.Request) {
+	//timer()
 	var filepath = path.Join("views", "index.html")
 	var tmpl, err = template.ParseFiles(filepath)
 	if err != nil {
@@ -69,6 +74,7 @@ func HomeWeather(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetStatusWeather(w http.ResponseWriter, r *http.Request) {
+	var filepath = path.Join("views", "index.html")
 
 	var statusWater string
 	var statusWind string
@@ -97,57 +103,75 @@ func GetStatusWeather(w http.ResponseWriter, r *http.Request) {
 	if dataWind > 15 {
 		statusWind = "status bahaya"
 	}
-	dataWeather := map[string]interface{}{
-		"status":         data,
-		"status_water": statusWater,
-		"status_wind":  statusWind,
+	//dataWeather := map[string]interface{}{
+	//	"status":         data,
+	//	"status_water": statusWater,
+	//	"status_wind":  statusWind,
+	//}
+	dataWeather := DataWeather{
+		Data:        data,
+		StatusWater: statusWater,
+		StatusWind:  statusWind,
 	}
 
-	jsonInBytes, err := json.Marshal(dataWeather)
+	var tmpl, err = template.ParseFiles(filepath)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	_, err = w.Write(jsonInBytes)
+
+	err = tmpl.Execute(w, dataWeather)
 	if err != nil {
-		return
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+
+	// json data
+
+	//jsonInBytes, err := json.Marshal(dataWeather)
+	//if err != nil {
+	//	http.Error(w, err.Error(), http.StatusInternalServerError)
+	//	return
+	//}
+	//w.Header().Set("Content-Type", "application/json")
+	//_, err = w.Write(jsonInBytes)
+	//if err != nil {
+	//	return
+	//}
 }
 
 func timer() {
+	RandomWeather()
 	time.AfterFunc(time.Duration(timeout)*time.Second, func() {
-		RandomWeather()
 		timer()
 	})
 }
 
 func checkDataweather() {
-	currentTime := time.Now()
-	dataWater := data.Water
-	dataWind := data.Wind
-	fmt.Printf("date %s", currentTime.Format("01-02-2006"))
-	//dataStatus:=""
-	if dataWater < 6 {
-
-		fmt.Printf("\n Water %s m,  status aman , date %s", dataWater, currentTime)
-	}
-	if dataWater >= 6 && dataWater <= 8 {
-		fmt.Printf("\nWater %s m,  status siaga", dataWater)
-
-	}
-	if dataWater > 8 {
-		fmt.Printf("\nWater %s m,  status bahaya", dataWater)
-	}
-	if dataWind < 7 {
-		fmt.Printf("\nWind %s m,  status aman", dataWind)
-
-	}
-	if dataWind >= 7 && dataWind <= 15 {
-		fmt.Printf("\nWind %s m,  status siaga", dataWind)
-	}
-	if dataWind > 15 {
-		fmt.Printf("\nWind %s m,  status bahaya", dataWind)
-	}
+	//currentTime := time.Now()
+	//dataWater := data.Water
+	//dataWind := data.Wind
+	//fmt.Printf("date %s", currentTime.Format("01-02-2006"))
+	////dataStatus:=""
+	//if dataWater < 6 {
+	//
+	//	fmt.Printf("\n Water %s m,  status aman , date %s", dataWater, currentTime)
+	//}
+	//if dataWater >= 6 && dataWater <= 8 {
+	//	fmt.Printf("\nWater %s m,  status siaga", dataWater)
+	//
+	//}
+	//if dataWater > 8 {
+	//	fmt.Printf("\nWater %s m,  status bahaya", dataWater)
+	//}
+	//if dataWind < 7 {
+	//	fmt.Printf("\nWind %s m,  status aman", dataWind)
+	//
+	//}
+	//if dataWind >= 7 && dataWind <= 15 {
+	//	fmt.Printf("\nWind %s m,  status siaga", dataWind)
+	//}
+	//if dataWind > 15 {
+	//	fmt.Printf("\nWind %s m,  status bahaya", dataWind)
+	//}
 
 }
