@@ -1,13 +1,40 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Weather live data</title>
-    <meta http-equiv="refresh" content="2" />
+    <meta http-equiv="refresh" content="15"/>
+    <style>
+        body {
+            background-image: url("/static/cuaca.jpg");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        .text {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            width: 50%;
+            padding: 20px;
+            font-size: 30px;
+            align-content: center;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-<p>Wind {{.StatusWater}}</p>
-<p>Water {{.StatusWind}}</p>
-<div>Water {{.Data.Water}}</div>
-<div>Wind {{.Data.Wind}}</div>
+<div class="center">
+
+
+    <div class="text">
+        <p>Status Weather </p>
+        <div>Water {{.Data.Water}} m ===> {{.StatusWater}}</div>
+        <div>Wind {{.Data.Wind}} m/s ===> {{.StatusWind}}</div>
+    </div>
+</div>
+
 </body>
 </html>
+

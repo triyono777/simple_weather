@@ -14,9 +14,10 @@ var timeout = 5
 func main() {
 
 	go timer()
-
-	http.HandleFunc("/", HomeWeather)
-	http.HandleFunc("/getWeather", GetStatusWeather)
+	http.Handle("/static/",
+		http.StripPrefix("/static/",
+			http.FileServer(http.Dir("assets"))))
+	http.HandleFunc("/", GetStatusWeather)
 
 	fmt.Println("server started at localhost:9000")
 	err := http.ListenAndServe(":9000", nil)
@@ -46,43 +47,19 @@ func RandomWeather() {
 		Water: rand.Intn(max - min),
 		Wind:  rand.Intn(max - min),
 	}
-	fmt.Println(data)
+	//fmt.Println(data)
 
 }
 
 var data Weather
-
-func HomeWeather(w http.ResponseWriter, r *http.Request) {
-	//timer()
-	var filepath = path.Join("views", "index.html")
-	var tmpl, err = template.ParseFiles(filepath)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	var dataContoh = map[string]interface{}{
-		"water": data.Water,
-		"wind":  data.Wind,
-		"data":  data,
-	}
-
-	err = tmpl.Execute(w, dataContoh)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-}
 
 func GetStatusWeather(w http.ResponseWriter, r *http.Request) {
 	var filepath = path.Join("views", "index.html")
 
 	var statusWater string
 	var statusWind string
-	currentTime := time.Now()
 	dataWater := data.Water
 	dataWind := data.Wind
-	fmt.Printf("date %s", currentTime.Format("01-02-2006"))
-	//dataStatus:=""
 	if dataWater < 6 {
 		statusWater = "status aman"
 	}
@@ -103,11 +80,7 @@ func GetStatusWeather(w http.ResponseWriter, r *http.Request) {
 	if dataWind > 15 {
 		statusWind = "status bahaya"
 	}
-	//dataWeather := map[string]interface{}{
-	//	"status":         data,
-	//	"status_water": statusWater,
-	//	"status_wind":  statusWind,
-	//}
+
 	dataWeather := DataWeather{
 		Data:        data,
 		StatusWater: statusWater,
@@ -144,34 +117,4 @@ func timer() {
 	time.AfterFunc(time.Duration(timeout)*time.Second, func() {
 		timer()
 	})
-}
-
-func checkDataweather() {
-	//currentTime := time.Now()
-	//dataWater := data.Water
-	//dataWind := data.Wind
-	//fmt.Printf("date %s", currentTime.Format("01-02-2006"))
-	////dataStatus:=""
-	//if dataWater < 6 {
-	//
-	//	fmt.Printf("\n Water %s m,  status aman , date %s", dataWater, currentTime)
-	//}
-	//if dataWater >= 6 && dataWater <= 8 {
-	//	fmt.Printf("\nWater %s m,  status siaga", dataWater)
-	//
-	//}
-	//if dataWater > 8 {
-	//	fmt.Printf("\nWater %s m,  status bahaya", dataWater)
-	//}
-	//if dataWind < 7 {
-	//	fmt.Printf("\nWind %s m,  status aman", dataWind)
-	//
-	//}
-	//if dataWind >= 7 && dataWind <= 15 {
-	//	fmt.Printf("\nWind %s m,  status siaga", dataWind)
-	//}
-	//if dataWind > 15 {
-	//	fmt.Printf("\nWind %s m,  status bahaya", dataWind)
-	//}
-
 }
